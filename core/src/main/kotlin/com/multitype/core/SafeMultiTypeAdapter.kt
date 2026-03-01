@@ -107,6 +107,6 @@ object SafeMultiTypeAdapterBuilder {
 /**
  * Extension function to create a SafeMultiTypeAdapter.
  */
-inline fun safeMultiTypeAdapter(configure: SafeMultiTypeAdapter.() -> Unit): SafeMultiTypeAdapter {
+fun safeMultiTypeAdapter(configure: SafeMultiTypeAdapter.() -> Unit): SafeMultiTypeAdapter {
     return SafeMultiTypeAdapterBuilder.create(configure)
 }
