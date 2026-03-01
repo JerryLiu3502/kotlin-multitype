@@ -2,6 +2,7 @@ package com.multitype.core
 
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertTrue
 
 class ItemSpanSizeLookupTest {
     
@@ -16,7 +17,7 @@ class ItemSpanSizeLookupTest {
     
     @Test
     fun test_custom_lookup() {
-        val lookup = ItemSpanSizeLookup { position, _ ->
+        val lookup = ItemSpanSizeLookupBuilder.create { position, _ ->
             if (position % 3 == 0) 3 else 1
         }
         

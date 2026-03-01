@@ -7,7 +7,7 @@ class ItemSpanSizeLookup(
     private val spanSizeProvider: (Int, Any) -> Int
 ) {
     /**
-     * Get the span size for a position.
+     * Get span size for position.
      */
     fun getSpanSize(position: Int, item: Any): Int {
         return spanSizeProvider(position, item)
@@ -20,29 +20,16 @@ class ItemSpanSizeLookup(
 object ItemSpanSizeLookupBuilder {
     
     /**
-     * Create a fixed span size lookup.
+     * Create with fixed span size.
      */
     fun fixedSpanSize(spanSize: Int): ItemSpanSizeLookup {
         return ItemSpanSizeLookup { _, _ -> spanSize }
     }
     
     /**
-     * Create a lookup based on item type.
+     * Create with custom lookup function.
      */
-    fun byType(spans: Map<Int, Int>, defaultSpan: Int = 1): ItemSpanSizeLookup {
-        return ItemSpanSizeLookup { _, item ->
-            val clazz = item::class.java
-            val hash = clazz.hashCode()
-            spans[hash] ?: defaultSpan
-        }
-    }
-    
-    /**
-     * Create a lookup based on item class.
-     */
-    fun byClass(spans: Map<Class<*>, Int>, defaultSpan: Int = 1): ItemSpanSizeLookup {
-        return ItemSpanSizeLookup { _, item ->
-            spans[item::class.java] ?: defaultSpan
-        }
+    fun create(spanSizeProvider: (Int, Any) -> Int): ItemSpanSizeLookup {
+        return ItemSpanSizeLookup(spanSizeProvider)
     }
 }
