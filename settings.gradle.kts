@@ -15,4 +15,6 @@ dependencyResolutionManagement {
 }
 
 rootProject.name = "kotlin-multitype"
+rootProject.description = "A powerful and flexible Kotlin multi-type RecyclerView adapter library"
+
 include("core")
