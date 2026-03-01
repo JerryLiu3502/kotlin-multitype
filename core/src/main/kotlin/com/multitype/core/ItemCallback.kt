@@ -76,21 +76,3 @@ object ItemCallbackBuilder {
         }
     }
 }
-
-/**
- * Extension function to create an ItemCallback.
- */
-inline fun createItemCallback(
-    crossinline areItemsTheSame: (Any, Any) -> Boolean,
-    crossinline areContentsTheSame: (Any, Any) -> Boolean
-): ItemCallback {
-    return object : ItemCallback() {
-        override fun areItemsTheSame(oldItem: Any, newItem: Any): Boolean {
-            return areItemsTheSame(oldItem, newItem)
-        }
-        
-        override fun areContentsTheSame(oldItem: Any, newItem: Any): Boolean {
-            return areContentsTheSame(oldItem, newItem)
-        }
-    }
-}

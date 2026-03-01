@@ -14,9 +14,13 @@ class ItemCallbackTest {
             areContentsTheSame = { old, new -> old == new }
         )
         
+        // Both "a" and "b" are Strings, so same type
         assertTrue(callback.areItemsTheSame("a", "b"))
-        assertTrue(callback.areItemsTheSame("a", 1))
+        // "a" is String, 1 is Int, so different types
+        assertFalse(callback.areItemsTheSame("a", 1))
+        // "a" != "b"
         assertFalse(callback.areContentsTheSame("a", "b"))
+        // "a" == "a"
         assertTrue(callback.areContentsTheSame("a", "a"))
     }
     
@@ -40,17 +44,6 @@ class ItemCallbackTest {
         assertTrue(callback.areItemsTheSame("a", "b"))
         assertTrue(callback.areContentsTheSame("a", "a"))
         assertFalse(callback.areContentsTheSame("a", "b"))
-    }
-    
-    @Test
-    fun test_extension_function() {
-        val callback = createItemCallback(
-            areItemsTheSame = { old, new -> old::class.java == new::class.java },
-            areContentsTheSame = { old, new -> old == new }
-        )
-        
-        assertTrue(callback.areItemsTheSame("test", 123))
-        assertTrue(callback.areContentsTheSame("test", "test"))
     }
     
     @Test
