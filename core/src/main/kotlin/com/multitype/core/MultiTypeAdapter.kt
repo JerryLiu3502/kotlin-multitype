@@ -1,9 +1,5 @@
 package com.multitype.core
 
-import android.view.View
-import android.view.ViewGroup
-import androidx.recyclerview.widget.RecyclerView
-
 /**
  * Base class for multi-type item binders.
  * Each binder handles a specific type of content.
@@ -32,11 +28,16 @@ abstract class ItemBinder<T> {
 }
 
 /**
- * Adapter for supporting multiple item types in a RecyclerView.
+ * Simple data class for items.
+ */
+data class Item(val content: String, val type: Int)
+
+/**
+ * Adapter for supporting multiple item types.
  * 
  * This is similar to GitHub's MultiTypeAdapter library.
  */
-class MultiTypeAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class MultiTypeAdapter {
     
     private val binders = mutableMapOf<Int, ItemBinder<*>>()
     private val items = mutableListOf<Any>()
@@ -54,16 +55,13 @@ class MultiTypeAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
      */
     fun addItem(item: Any) {
         items.add(item)
-        notifyItemInserted(items.size - 1)
     }
     
     /**
      * Add multiple items to the adapter.
      */
     fun addItems(newItems: List<Any>) {
-        val start = items.size
         items.addAll(newItems)
-        notifyItemRangeInserted(start, newItems.size)
     }
     
     /**
@@ -71,7 +69,6 @@ class MultiTypeAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
      */
     fun clearItems() {
         items.clear()
-        notifyDataSetChanged()
     }
     
     /**
@@ -84,7 +81,15 @@ class MultiTypeAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
      */
     fun getItems(): List<Any> = items.toList()
     
-    override fun getItemViewType(position: Int): Int {
+    /**
+     * Get item count.
+     */
+    fun getItemCount(): Int = items.size
+    
+    /**
+     * Get view type for position.
+     */
+    fun getItemViewType(position: Int): Int {
         val item = items[position]
         for ((type, binder) in binders) {
             if (binder.getContentType().isInstance(item)) {
@@ -94,30 +99,15 @@ class MultiTypeAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         throw IllegalArgumentException("No binder found for item: ${item::class.java}")
     }
     
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-        val binder = binders[viewType] 
-            ?: throw IllegalArgumentException("No binder found for view type: $viewType")
-        
-        // In a real implementation, we would inflate the layout here
-        // For now, we return a simple placeholder
-        return object : RecyclerView.ViewHolder(View(parent.context)) {}
-    }
-    
-    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+    /**
+     * Bind item at position.
+     */
+    fun onBindViewHolder(holder: Any, position: Int) {
         val item = items[position]
         val viewType = getItemViewType(position)
         val binder = binders[viewType] ?: return
         
-        // In a real implementation, we would bind the data here
-        // For now, this is a placeholder
-    }
-    
-    override fun getItemCount(): Int = items.size
-    
-    override fun onViewRecycled(holder: RecyclerView.ViewHolder) {
-        super.onViewRecycled(holder)
-        val viewType = holder.itemViewType
-        val binder = binders[viewType]
-        // In a real implementation, we would call onRecycle here
+        @Suppress("UNCHECKED_CAST")
+        (binder as ItemBinder<Any>).onBind(holder, item, position)
     }
 }

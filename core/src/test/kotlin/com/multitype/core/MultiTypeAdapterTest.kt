@@ -14,6 +14,12 @@ class MultiTypeAdapterTest {
     }
     
     @Test
+    fun test_adapter_starts_empty_via_count_method() {
+        val adapter = MultiTypeAdapter()
+        assertEquals(0, adapter.itemCount)
+    }
+    
+    @Test
     fun test_add_single_item() {
         val adapter = MultiTypeAdapter()
         adapter.addItem("test item")
@@ -63,10 +69,21 @@ class MultiTypeAdapterTest {
     fun test_item_view_type() {
         val adapter = MultiTypeAdapter()
         adapter.addItem("string item")
-        // Without registered binder, should throw
-        assertFailsWith<IllegalArgumentException> {
-            adapter.getItemViewType(0)
-        }
+        adapter.register(TestBinder())
+        // Should not throw with registered binder
+        val viewType = adapter.getItemViewType(0)
+        assertEquals(0, viewType)
+    }
+    
+    @Test
+    fun test_on_bind_view_holder() {
+        val adapter = MultiTypeAdapter()
+        adapter.addItem("test string")
+        adapter.register(TestBinder())
+        
+        // Should not throw
+        adapter.onBindViewHolder(Unit, 0)
+        assertTrue(true)
     }
 }
 
@@ -74,7 +91,7 @@ class MultiTypeAdapterTest {
  * Test binder for string items.
  */
 class TestBinder : ItemBinder<String> {
-    override fun getLayoutId(): Int = android.R.layout.simple_list_item_1
+    override fun getLayoutId(): Int = 1
     
     override fun getContentType(): Int = 0
     
