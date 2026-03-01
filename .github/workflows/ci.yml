@@ -32,26 +32,3 @@ jobs:
       
     - name: Run build
       run: gradle build
-      
-  build-docs:
-    name: Build Documentation
-    runs-on: ubuntu-latest
-    needs: test
-    
-    steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
-      
-    - name: Set up JDK 17
-      uses: actions/setup-java@v4
-      with:
-        java-version: '17'
-        distribution: 'temurin'
-        
-    - name: Setup Gradle
-      uses: gradle/gradle-build-action@v2
-      with:
-        gradle-version: 8.5
-        
-    - name: Build documentation
-      run: gradle dokkaHtml
