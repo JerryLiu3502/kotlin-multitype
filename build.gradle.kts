@@ -6,11 +6,6 @@ plugins {
 subprojects {
     apply(plugin = "kotlin")
     
-    repositories {
-        google()
-        mavenCentral()
-    }
-    
     dependencies {
         "implementation"(kotlin("stdlib"))
     }
