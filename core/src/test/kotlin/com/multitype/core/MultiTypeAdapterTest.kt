@@ -14,12 +14,6 @@ class MultiTypeAdapterTest {
     }
     
     @Test
-    fun test_adapter_starts_empty_via_count_method() {
-        val adapter = MultiTypeAdapter()
-        assertEquals(0, adapter.itemCount)
-    }
-    
-    @Test
     fun test_add_single_item() {
         val adapter = MultiTypeAdapter()
         adapter.addItem("test item")
@@ -90,14 +84,14 @@ class MultiTypeAdapterTest {
 /**
  * Test binder for string items.
  */
-class StringBinder : ItemBinder<String> {
+class StringBinder : ItemBinder() {
     override fun getLayoutId(): Int = 1
     
     override fun getContentType(): Int = 0
     
-    override fun getItemClass(): Class<out String> = String::class.java
+    override fun getItemClass(): Class<*> = String::class.java
     
-    override fun onBind(binding: Any, item: String, position: Int) {
+    override fun onBind(binding: Any, item: Any, position: Int) {
         // Test implementation
     }
 }

@@ -4,7 +4,7 @@ package com.multitype.core
  * Base class for multi-type item binders.
  * Each binder handles a specific type of content.
  */
-abstract class ItemBinder<T> {
+abstract class ItemBinder {
     
     /**
      * Returns the layout resource ID for this binder.
@@ -19,12 +19,19 @@ abstract class ItemBinder<T> {
     /**
      * Returns the class type this binder handles.
      */
-    abstract fun getItemClass(): Class<out T>
+    abstract fun getItemClass(): Class<*>
+    
+    /**
+     * Check if this binder can handle the given item.
+     */
+    open fun canHandle(item: Any): Boolean {
+        return getItemClass().isInstance(item)
+    }
     
     /**
      * Called when the view is created. Bind the data to the view here.
      */
-    abstract fun onBind(binding: Any, item: T, position: Int)
+    abstract fun onBind(binding: Any, item: Any, position: Int)
     
     /**
      * Called when the view is recycled. Clean up any resources here.
@@ -44,17 +51,16 @@ data class Item(val content: String, val type: Int)
  */
 class MultiTypeAdapter {
     
-    private val classToBinder = mutableMapOf<Class<*>, ItemBinder<*>>()
-    private val typeToBinder = mutableMapOf<Int, ItemBinder<*>>()
+    private val classToBinder = mutableMapOf<Class<*>, ItemBinder>()
+    private val typeToBinder = mutableMapOf<Int, ItemBinder>()
     private val items = mutableListOf<Any>()
     
     /**
      * Register a binder for a specific content type.
      */
-    fun <T> register(binder: ItemBinder<T>) {
-        @Suppress("UNCHECKED_CAST")
+    fun register(binder: ItemBinder) {
         classToBinder[binder.getItemClass()] = binder
-        typeToBinder[binder.getContentType()] = binder as ItemBinder<*>
+        typeToBinder[binder.getContentType()] = binder
     }
     
     /**
@@ -101,7 +107,7 @@ class MultiTypeAdapter {
         
         // First try to find by class
         val binder = classToBinder[item::class.java]
-            ?: typeToBinder.entries.find { it.value.getItemClass().isInstance(item) }?.value
+            ?: typeToBinder.entries.find { it.value.canHandle(item) }?.value
             ?: throw IllegalArgumentException("No binder found for item: ${item::class.java}")
         
         return binder.getContentType()
@@ -115,7 +121,6 @@ class MultiTypeAdapter {
         val viewType = getItemViewType(position)
         val binder = typeToBinder[viewType] ?: return
         
-        @Suppress("UNCHECKED_CAST")
-        (binder as ItemBinder<Any>).onBind(holder, item, position)
+        binder.onBind(holder, item, position)
     }
 }
