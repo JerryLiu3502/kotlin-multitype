@@ -4,13 +4,13 @@ package com.multitype.core
  * Item span size lookup for GridLayoutManager.
  */
 class ItemSpanSizeLookup(
-    private val getSpanSize: (Int, Any) -> Int
+    private val spanSizeProvider: (Int, Any) -> Int
 ) {
     /**
      * Get the span size for a position.
      */
     fun getSpanSize(position: Int, item: Any): Int {
-        return getSpanSize(position, item)
+        return spanSizeProvider(position, item)
     }
 }
 
@@ -44,14 +44,5 @@ object ItemSpanSizeLookupBuilder {
         return ItemSpanSizeLookup { _, item ->
             spans[item::class.java] ?: defaultSpan
         }
-    }
-}
-
-/**
- * Extension function to create span size lookup.
- */
-inline fun createSpanSizeLookup(crossinline getSpanSize: (Int, Any) -> Int): ItemSpanSizeLookup {
-    return ItemSpanSizeLookup { position, item ->
-        getSpanSize(position, item)
     }
 }
