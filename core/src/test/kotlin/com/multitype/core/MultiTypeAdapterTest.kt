@@ -136,6 +136,8 @@ class TypePoolTest {
 class StringBinder : ItemBinder() {
     override fun getItemClass(): Class<*> = String::class.java
     
+    override fun getContentType(): Int = 0
+    
     override fun bind(holder: Any, item: Any, position: Int) {
         // Test implementation
     }
