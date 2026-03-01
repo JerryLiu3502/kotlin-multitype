@@ -59,7 +59,7 @@ class MultiTypeAdapterTest {
     @Test
     fun test_register_binder() {
         val adapter = MultiTypeAdapter()
-        val binder = TestBinder()
+        val binder = StringBinder()
         adapter.register(binder)
         // Registration should not throw
         assertTrue(true)
@@ -69,7 +69,7 @@ class MultiTypeAdapterTest {
     fun test_item_view_type() {
         val adapter = MultiTypeAdapter()
         adapter.addItem("string item")
-        adapter.register(TestBinder())
+        adapter.register(StringBinder())
         // Should not throw with registered binder
         val viewType = adapter.getItemViewType(0)
         assertEquals(0, viewType)
@@ -79,7 +79,7 @@ class MultiTypeAdapterTest {
     fun test_on_bind_view_holder() {
         val adapter = MultiTypeAdapter()
         adapter.addItem("test string")
-        adapter.register(TestBinder())
+        adapter.register(StringBinder())
         
         // Should not throw
         adapter.onBindViewHolder(Unit, 0)
@@ -90,7 +90,7 @@ class MultiTypeAdapterTest {
 /**
  * Test binder for string items.
  */
-class TestBinder : ItemBinder<String> {
+class StringBinder : ItemBinder<String> {
     override fun getLayoutId(): Int = 1
     
     override fun getContentType(): Int = 0

@@ -91,6 +91,11 @@ class MultiTypeAdapter {
     /**
      * Get item count.
      */
+    val itemCount: Int get() = items.size
+    
+    /**
+     * Get item count.
+     */
     fun getItemCount(): Int = items.size
     
     /**
