@@ -4,11 +4,6 @@ plugins {
 
 version = "0.1.0"
 
-repositories {
-    google()
-    mavenCentral()
-}
-
 dependencies {
     implementation("org.jetbrains.kotlin:kotlin-stdlib:1.9.22")
     
