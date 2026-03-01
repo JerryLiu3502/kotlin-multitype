@@ -42,7 +42,7 @@ class ItemSpanSizeLookupTest {
     
     @Test
     fun test_extension_function() {
-        val lookup = createSpanSizeLookup { position, _ ->
+        val lookup = ItemSpanSizeLookup { position, _ ->
             if (position % 3 == 0) 3 else 1
         }
         
