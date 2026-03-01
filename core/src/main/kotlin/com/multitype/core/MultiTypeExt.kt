@@ -45,33 +45,33 @@ fun <T> MultiTypeRecyclerViewAdapter.getItemAt(position: Int): T {
  */
 @Suppress("UNCHECKED_CAST")
 fun <T> MultiTypeRecyclerViewAdapter.getItemsOfType(clazz: Class<T>): List<T> {
-    return items.filterIsInstance(clazz)
+    return getItems().filterIsInstance(clazz)
 }
 
 /**
  * Get the position of an item in the adapter.
  */
 fun MultiTypeRecyclerViewAdapter.indexOf(item: Any): Int {
-    return items.indexOf(item)
+    return getItems().indexOf(item)
 }
 
 /**
  * Check if adapter contains an item.
  */
 fun MultiTypeRecyclerViewAdapter.contains(item: Any): Boolean {
-    return items.contains(item)
+    return getItems().contains(item)
 }
 
 /**
  * Check if adapter is empty.
  */
 fun MultiTypeRecyclerViewAdapter.isEmpty(): Boolean {
-    return itemCount == 0
+    return getItemCount() == 0
 }
 
 /**
  * Check if adapter is not empty.
  */
 fun MultiTypeRecyclerViewAdapter.isNotEmpty(): Boolean {
-    return itemCount > 0
+    return getItemCount() > 0
 }
