@@ -36,20 +36,40 @@ object ItemFilterBuilder {
     }
     
     /**
-     * Create by class.
+     * Create by type check.
      */
-    fun createByClass(vararg classes: Class<*>): ItemFilter {
+    fun createByType(vararg types: String): ItemFilter {
         return SimpleItemFilter { item ->
-            classes.any { it.isInstance(item) }
+            types.any { type ->
+                when (type) {
+                    "String" -> item is String
+                    "Int" -> item is Int
+                    "Long" -> item is Long
+                    "Double" -> item is Double
+                    "Float" -> item is Float
+                    "Boolean" -> item is Boolean
+                    else -> false
+                }
+            }
         }
     }
     
     /**
-     * Create exclude by class.
+     * Create exclude by type.
      */
-    fun excludeByClass(vararg classes: Class<*>): ItemFilter {
+    fun excludeByType(vararg types: String): ItemFilter {
         return SimpleItemFilter { item ->
-            classes.none { it.isInstance(item) }
+            types.none { type ->
+                when (type) {
+                    "String" -> item is String
+                    "Int" -> item is Int
+                    "Long" -> item is Long
+                    "Double" -> item is Double
+                    "Float" -> item is Float
+                    "Boolean" -> item is Boolean
+                    else -> false
+                }
+            }
         }
     }
 }

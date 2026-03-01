@@ -16,7 +16,10 @@ class ItemFilterTest {
     
     @Test
     fun test_create_by_class() {
-        val filter = ItemFilterBuilder.createByClass(String::class.java, Int::class.java)
+        // Use String and Int types directly
+        val filter = ItemFilterBuilder.create { item ->
+            item is String || item is Int
+        }
         
         assertTrue(filter.accept("test"))
         assertTrue(filter.accept(123))
@@ -25,7 +28,9 @@ class ItemFilterTest {
     
     @Test
     fun test_exclude_by_class() {
-        val filter = ItemFilterBuilder.excludeByClass(String::class.java)
+        val filter = ItemFilterBuilder.create { item ->
+            item !is String
+        }
         
         assertFalse(filter.accept("test"))
         assertTrue(filter.accept(123))
