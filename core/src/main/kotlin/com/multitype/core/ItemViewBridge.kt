@@ -5,7 +5,7 @@ package com.multitype.core
  * 
  * This is similar to Drakeet's ViewBinder.
  */
-interface ItemViewBridge<V : android.view.View> {
+interface ItemViewBridge<in V> {
     
     /**
      * Bind the view with the item.
@@ -27,7 +27,7 @@ interface ItemViewBridge<V : android.view.View> {
 /**
  * Simple implementation of ItemViewBridge using a lambda.
  */
-class SimpleItemViewBridge<V : android.view.View>(
+class SimpleItemViewBridge<V>(
     private val bind: (V, Any, Int) -> Unit
 ) : ItemViewBridge<V> {
     
@@ -44,7 +44,7 @@ object ViewBinder {
     /**
      * Create an ItemViewBridge with a bind function.
      */
-    fun <V : android.view.View> create(
+    fun <V> create(
         bind: (V, Any, Int) -> Unit
     ): ItemViewBridge<V> {
         return SimpleItemViewBridge(bind)
@@ -53,7 +53,7 @@ object ViewBinder {
     /**
      * Create an ItemViewBridge with bind and recycle functions.
      */
-    fun <V : android.view.View> create(
+    fun <V> create(
         bind: (V, Any, Int) -> Unit,
         recycle: (V) -> Unit
     ): ItemViewBridge<V> {
