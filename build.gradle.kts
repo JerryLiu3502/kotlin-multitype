@@ -3,12 +3,15 @@ plugins {
     kotlin("jvm") version "1.9.22" apply false
 }
 
-tasks.register<Jar>("sourcesJar") {
-    archiveClassifier.set("sources")
-    from(sourceSets.main.get().allSource)
-}
-
-tasks.register<Jar>("javadocJar") {
-    archiveClassifier.set("javadoc")
-    from(tasks.javadoc)
+subprojects {
+    apply(plugin = "kotlin")
+    
+    repositories {
+        google()
+        mavenCentral()
+    }
+    
+    dependencies {
+        "implementation"(kotlin("stdlib"))
+    }
 }
