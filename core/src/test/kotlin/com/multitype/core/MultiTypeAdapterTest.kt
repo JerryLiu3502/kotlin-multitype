@@ -95,6 +95,8 @@ class TestBinder : ItemBinder<String> {
     
     override fun getContentType(): Int = 0
     
+    override fun getItemClass(): Class<out String> = String::class.java
+    
     override fun onBind(binding: Any, item: String, position: Int) {
         // Test implementation
     }

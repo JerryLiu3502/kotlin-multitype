@@ -17,6 +17,11 @@ abstract class ItemBinder<T> {
     abstract fun getContentType(): Int
     
     /**
+     * Returns the class type this binder handles.
+     */
+    abstract fun getItemClass(): Class<out T>
+    
+    /**
      * Called when the view is created. Bind the data to the view here.
      */
     abstract fun onBind(binding: Any, item: T, position: Int)
@@ -39,7 +44,8 @@ data class Item(val content: String, val type: Int)
  */
 class MultiTypeAdapter {
     
-    private val binders = mutableMapOf<Int, ItemBinder<*>>()
+    private val classToBinder = mutableMapOf<Class<*>, ItemBinder<*>>()
+    private val typeToBinder = mutableMapOf<Int, ItemBinder<*>>()
     private val items = mutableListOf<Any>()
     
     /**
@@ -47,7 +53,8 @@ class MultiTypeAdapter {
      */
     fun <T> register(binder: ItemBinder<T>) {
         @Suppress("UNCHECKED_CAST")
-        binders[binder.getContentType()] = binder as ItemBinder<*>
+        classToBinder[binder.getItemClass()] = binder
+        typeToBinder[binder.getContentType()] = binder as ItemBinder<*>
     }
     
     /**
@@ -91,12 +98,13 @@ class MultiTypeAdapter {
      */
     fun getItemViewType(position: Int): Int {
         val item = items[position]
-        for ((type, binder) in binders) {
-            if (binder.getContentType().isInstance(item)) {
-                return type
-            }
-        }
-        throw IllegalArgumentException("No binder found for item: ${item::class.java}")
+        
+        // First try to find by class
+        val binder = classToBinder[item::class.java]
+            ?: typeToBinder.entries.find { it.value.getItemClass().isInstance(item) }?.value
+            ?: throw IllegalArgumentException("No binder found for item: ${item::class.java}")
+        
+        return binder.getContentType()
     }
     
     /**
@@ -105,7 +113,7 @@ class MultiTypeAdapter {
     fun onBindViewHolder(holder: Any, position: Int) {
         val item = items[position]
         val viewType = getItemViewType(position)
-        val binder = binders[viewType] ?: return
+        val binder = typeToBinder[viewType] ?: return
         
         @Suppress("UNCHECKED_CAST")
         (binder as ItemBinder<Any>).onBind(holder, item, position)
