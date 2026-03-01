@@ -94,11 +94,6 @@ class MultiTypeAdapter {
     val itemCount: Int get() = items.size
     
     /**
-     * Get item count.
-     */
-    fun getItemCount(): Int = items.size
-    
-    /**
      * Get view type for position.
      */
     fun getItemViewType(position: Int): Int {
