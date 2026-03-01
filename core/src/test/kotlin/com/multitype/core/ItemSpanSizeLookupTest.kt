@@ -29,7 +29,7 @@ class ItemSpanSizeLookupTest {
     
     @Test
     fun test_by_class() {
-        val spans = mapOf(
+        val spans = mapOf<Class<*>, Int>(
             String::class.java to 2,
             Int::class.java to 3
         )
