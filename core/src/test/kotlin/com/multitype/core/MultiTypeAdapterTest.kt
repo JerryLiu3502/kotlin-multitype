@@ -4,6 +4,7 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 import kotlin.test.assertFailsWith
+import com.multitype.annotations.ItemViewBinder
 
 class MultiTypeAdapterTest {
     
@@ -81,17 +82,88 @@ class MultiTypeAdapterTest {
     }
 }
 
+class TypePoolTest {
+    
+    @Test
+    fun test_register_binder() {
+        val pool = TypePool()
+        pool.register(StringBinder())
+        assertEquals(1, pool.getTypeCount())
+    }
+    
+    @Test
+    fun test_register_multiple_binders() {
+        val pool = TypePool()
+        pool.register(StringBinder())
+        pool.register(IntBinder())
+        assertEquals(2, pool.getTypeCount())
+    }
+    
+    @Test
+    fun test_get_binder_by_class() {
+        val pool = TypePool()
+        val binder = StringBinder()
+        pool.register(binder)
+        
+        val found = pool.getBinder(String::class.java)
+        assertTrue(found != null)
+    }
+    
+    @Test
+    fun test_get_type_by_class() {
+        val pool = TypePool()
+        val binder = StringBinder()
+        pool.register(binder)
+        
+        val type = pool.getType(String::class.java)
+        assertTrue(type != null)
+    }
+    
+    @Test
+    fun test_clear() {
+        val pool = TypePool()
+        pool.register(StringBinder())
+        pool.register(IntBinder())
+        
+        pool.clear()
+        assertEquals(0, pool.getTypeCount())
+    }
+}
+
 /**
  * Test binder for string items.
  */
 class StringBinder : ItemBinder() {
-    override fun getLayoutId(): Int = 1
-    
-    override fun getContentType(): Int = 0
-    
     override fun getItemClass(): Class<*> = String::class.java
     
-    override fun onBind(binding: Any, item: Any, position: Int) {
+    override fun bind(holder: Any, item: Any, position: Int) {
+        // Test implementation
+    }
+}
+
+/**
+ * Test binder for integer items.
+ */
+class IntBinder : ItemBinder() {
+    override fun getItemClass(): Class<*> = Int::class.java
+    
+    override fun bind(holder: Any, item: Any, position: Int) {
+        // Test implementation
+    }
+}
+
+/**
+ * Test data class.
+ */
+data class TestData(val name: String, val value: Int)
+
+/**
+ * Test binder for TestData items.
+ */
+class TestDataBinder : ItemBinder() {
+    override fun getItemClass(): Class<*> = TestData::class.java
+    
+    override fun bind(holder: Any, item: Any, position: Int) {
         // Test implementation
     }
 }

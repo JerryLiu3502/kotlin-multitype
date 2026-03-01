@@ -1,53 +1,7 @@
 package com.multitype.core
 
 /**
- * Base class for multi-type item binders.
- * Each binder handles a specific type of content.
- */
-abstract class ItemBinder {
-    
-    /**
-     * Returns the layout resource ID for this binder.
-     */
-    abstract fun getLayoutId(): Int
-    
-    /**
-     * Returns the content type identifier for this binder.
-     */
-    abstract fun getContentType(): Int
-    
-    /**
-     * Returns the class type this binder handles.
-     */
-    abstract fun getItemClass(): Class<*>
-    
-    /**
-     * Check if this binder can handle the given item.
-     */
-    open fun canHandle(item: Any): Boolean {
-        return getItemClass().isInstance(item)
-    }
-    
-    /**
-     * Called when the view is created. Bind the data to the view here.
-     */
-    abstract fun onBind(binding: Any, item: Any, position: Int)
-    
-    /**
-     * Called when the view is recycled. Clean up any resources here.
-     */
-    open fun onRecycle(binding: Any) {}
-}
-
-/**
- * Simple data class for items.
- */
-data class Item(val content: String, val type: Int)
-
-/**
- * Adapter for supporting multiple item types.
- * 
- * This is similar to GitHub's MultiTypeAdapter library.
+ * Simple adapter for supporting multiple item types.
  */
 class MultiTypeAdapter {
     
@@ -121,6 +75,6 @@ class MultiTypeAdapter {
         val viewType = getItemViewType(position)
         val binder = typeToBinder[viewType] ?: return
         
-        binder.onBind(holder, item, position)
+        binder.bind(holder, item, position)
     }
 }
